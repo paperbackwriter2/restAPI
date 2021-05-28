@@ -53,21 +53,25 @@ app.put('/posts/:id', (req,res) =>{
     // find specified post by id
     let id = req.params.id;
 
-    let foundPost = posts.find(post => {
+    let updatePost = posts.find(post => {
         return String(post.id) === id
 
         // foundPost will either be an object or undefined
     })
-    foundPost.title = req.body.title
-    foundPost.body = req.body.body
 
-    let stringedData = JSON.stringify(posts, null, 2);
-    fs.writeFile('posts.json', stringedData, function(err) {
-        if (err) {
-            return res.status(500).json({ message: err})
-        }
-    })
-    return res.status(200).json({message: "post updated successfully"})
+    if (updatePost) {
+        updatePost.title = req.body.title
+        updatePost.body = req.body.body
+    
+        let stringedData = JSON.stringify(posts, null, 2);
+        fs.writeFile('posts.json', stringedData, function(err) {
+            if (err) {
+                return res.status(500).json({ message: err})
+            }
+        })
+        return res.status(200).json({message: "post updated successfully"})
+    }
+
 })
 
 
